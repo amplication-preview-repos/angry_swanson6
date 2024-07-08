@@ -1,0 +1,111 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Photo {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  description String?
+  url         String?
+  uploadedAt  DateTime?
+  user        User?     @relation(fields: [userId], references: [id])
+  userId      String?
+}
+
+model Video {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  url         String?
+  description String?
+  uploadedAt  DateTime?
+  user        User?     @relation(fields: [userId], references: [id])
+  userId      String?
+}
+
+model Audio {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  url         String?
+  description String?
+  uploadedAt  DateTime?
+  user        User?     @relation(fields: [userId], references: [id])
+  userId      String?
+}
+
+model Faq {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  answer    String?
+  question  String?
+}
+
+model Help {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  content   String?
+  title     String?
+}
+
+model Statistics {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  totalPhotos Int?
+  totalVideos Int?
+  totalAudios Int?
+  totalPdFs   Int?
+  user        User?    @relation(fields: [userId], references: [id])
+  userId      String?
+}
+
+model Settings {
+  id                   String                    @id @default(cuid())
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
+  theme                String?
+  language             String?
+  notificationsEnabled Boolean?
+  privacyLevel         EnumSettingsPrivacyLevel?
+}
+
+model Pdf {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  description String?
+  uploadedAt  DateTime?
+  url         String?
+  user        User?     @relation(fields: [userId], references: [id])
+  userId      String?
+}
+
+model User {
+  id              String       @id @default(cuid())
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  firstName       String?
+  lastName        String?
+  username        String       @unique
+  email           String?      @unique
+  password        String
+  roles           Json
+  photos          Photo[]
+  videos          Video[]
+  audioItems      Audio[]
+  pdfs            Pdf[]
+  statisticsItems Statistics[]
+}
+
+enum EnumSettingsPrivacyLevel {
+  Option1
+}
